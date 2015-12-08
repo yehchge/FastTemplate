@@ -1,0 +1,65 @@
+<!-- NAME: flextable.html -->
+<html>
+<title>Fasttemplate: flexible table demo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<body>
+<h3>{caption}</h3>
+<form method="post" action="flex_table.php">
+<table>
+<tr>
+    <td>
+        Choose number of rows: 
+    </td>
+    <td>
+        <input type="text" value="{rows}" name="rows"> 
+    </td>
+</tr>
+<tr>
+    <td>
+        Choose number of cols: 
+    </td>
+    <td>
+        <input type="text" value="{cols}" name="cols">
+    </td>
+</tr>
+<tr>
+    <td>&nbsp;
+    
+    </td>
+    <td>
+        <input type="Submit" value="Generate table">
+    </td>
+</tr>
+
+</table>
+</form>
+<hr>
+
+<table border=0 bordercolor="#FFFFFF" bgcolor="#FFFFFF" cellspacing="1" cellpadding="3">
+        <tr>
+
+   <!-- BEGIN DYNAMIC BLOCK: header -->
+              <th bgcolor="#c5c8d0">{header}</th>
+   <!-- END DYNAMIC BLOCK: header -->
+
+
+        </tr>
+        <!-- BEGIN DYNAMIC BLOCK: rows -->
+         <tr>
+
+            <!-- BEGIN DYNAMIC BLOCK: cols -->
+                <td bgcolor="#eeeeee" align="right">{cellvalue}</a></td>
+            <!-- END DYNAMIC BLOCK: cols -->
+        </tr>
+       <!-- END DYNAMIC BLOCK: rows -->
+
+</table>
+</td></tr>
+</table>
+
+<br>
+ <a href="index.html">Back to index</a>
+</body>
+</html>
+
+<!-- END: flextable.html -->

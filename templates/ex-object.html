@@ -1,0 +1,10 @@
+{* $Id: ex-object.html,v 1.2 2005/06/15 19:37:15 vadim Exp $
+Demo of using Object in templates
+start: Tue Feb 08 21:23:55 EET 2005 @849 /Internet Time/
+@author Voituk Vadim <voituk###asg.kiev.ua>
+*}
+<U>User info:</U><br>
+UID: <B>{User.id}</B><BR>
+F.Name: <B>{User.first_name}</B><BR>
+S.Name: <B>{User.second_name}</B><BR>
+User`s email <!-- IFDEF: User.email --> <A href="mailto:{User.email}">{User.email}</A><!-- ELSE --><I>none</I><!-- ENDIF -->

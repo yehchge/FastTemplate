@@ -1,0 +1,45 @@
+{* $Id: ifelse.html,v 1.2 2005/06/15 19:37:15 vadim Exp $
+Example of using new features in FastTemplate
+start: Mon Jan 17 23:16:57 EET 2005 @928 /Internet Time/
+@author Voituk Vadim vadim###asg.kiev.ua
+
+This is template comments!!!
+Now you can use it!!! ;-) 
+
+*}
+
+<form method="post">
+	Select user name (optional)<input type="text" name="name" />
+	<br />
+	Select user surname (optional) <input type="text" name="surname" />
+	<br />
+	Select number <select name="number"><option value="1">1</option>
+	<option value="2">2</option>
+	<option value="3">3</option>
+	<option value="4">4</option>
+	<option value="5">5</option>
+	</select>
+	<br />
+	<input type="submit" />
+</form>
+
+User name: {USER_NAME}<br />
+<!-- IFDEF: USER_SURNAME -->
+Users surname: {USER_SURNAME}
+<!-- ELSE -->
+<i>Users surname is not defined</i>
+<!-- ENDIF -->
+<br />
+<br />
+
+<ul>
+<!-- BEGIN DYNAMIC BLOCK: dn_test -->
+	<!-- IFDEF: is_li_selected -->
+	<li><b>{NUMBER}</b>&lt;--selected
+	<!-- ELSE -->
+	</li>
+	<li>{NUMBER}
+	<!-- ENDIF -->
+<!-- END DYNAMIC BLOCK: dn_test -->
+</li>
+</ul>

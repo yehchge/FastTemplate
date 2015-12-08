@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>Fasttemplate for PHP 4.x</title>
+
+
+<h3>Fasttemplate for PHP 4.x, 5.x </h3>
+<p>
+This version of Fasttemplate is adopted for PHP 4.x, including dynamic template handling.
+  <br>
+Tested with PHP 4.x.x (WinNT)
+<p>Documentation ... <a href="docs/index.html">FastTemplateDocumentation.html</a>
+<p>
+Samples:
+<ul>
+<li><a href="example_1.php"> example_1.php </a></li>
+<li><a href="example_2.php"> example_2.php </a></li>
+<li><a href="example_3.php"> example_3.php </a></li>
+<li><a href="flex_table.php"> flex_table.php </a></li>
+<li><a href="phpcode_with_debug.php"> phpcode_with_debug.php </a><br>
+  Example to see how to show a debug windows, to see different Fast Template errors. </li>
+<li><a href="cache_ex.php">Cache with Fast Template </a>/ <a href="deletecache_ex.php">Delete expired cache files</a> <strong>(new in 1.3.0)</strong> <br>
+  Write/Delete content into a cache file to make faster load of the page second time, until cache is valid.</li>
+<li><a href="fastwrite.php">FastWrite</a><br>
+  It is like FastPrint, just write content into a file. Very usefull for making offline content, <br>
+  write different outputs into files etc. </li>
+<li><a href="langdemo.php">Language DEMO for multiple_assign</a> (same method can be used if you use define instead of $) <br>
+  It is easy now to simple use a in template a {TAG) and to be replaced direcctly from<br>
+  language file for example, without an assign. See the demo file and source.</li>
+<li><A href="ex-object.php">Added support for access object fields using get() or getId() methods from templates</A><br>
+	(For ex. {Object.field} = Object->get('field')  && {Object.id} = Object->getId() )<br>
+	It is something like using JavaBeans in JSP </li>
+<li><A href="ex-parse_and_return.php">Added FastTemplate::parse_and_return($template_name) method</A><br>
+	Parse template and return it as string
+	Can be used instead FastTemplate::parse() && FastTemplate::fetch<br>
+	Added templates comments. Smth like {* This is a comment *}<br>
+	New FastTemplate::define() - now supports array and name and value as parameter</li>
+<LI><A href="ex-include.php">Added &lt;!--#include file="filename.html" --&gt; template statement</A> <strong>(new in 1.3.0)</strong> <br>
+  It is usefull if you have several different templates for different parts of page and you dont need to write <br>
+  any php code to gather all &quot;blocks&quot; of the page</LI>
+</ul>
+<p align = "justify">
+<a href = "http://www.thewebmasters.net/" target="_blank">Official Fasttemplate home page</a>
+
+<br>
+<p align = "justify">ChangeLog: <a href="CHANGELOG">click here</a>
+<p align = "justify">Questions or comments send to <A HREF="mailto:support@grafxsoftware.com?subject=FastTemplate">support@grafxsoftware.com</A>
+<p align =" justify">
+Download
+<a href ="http://www.grafxsoftware.com/download.php"> Fasttemplate for PHP 4.x (~56K)</a>

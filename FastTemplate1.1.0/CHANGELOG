@@ -1,0 +1,110 @@
+CHANGELOG
+class.FastTemplate.php3
+Current Version: 1.1.0  Jun 27 1999  13:32:00 CDI, cdi@thewebmasters.net
+
+==================================
+1.1.0 Changes: Jun 27 1999  13:32:00
+
+	This is a major update. Version jump due to finally getting my code
+	converted over to CVS.
+
+	Added clear_dynamic():
+		Ran into a few instances where a dynamic block was not going to be
+		used, so now there's a way to remove it from a template.
+
+	Added get_assigned(): Christian Brandel cbrandel@gmx.de
+		Returns the value of a variable previously set using assign(), if
+		any.
+
+	Modified FastPrint():
+		FastPrint would have been an illegal construct in PHP4/Zend. Fixed. 
+		Personal Note: I don't have access to the PHP4 beta even though I've
+		asked repeatedly, so pardon me if I get a bit irritated when I'm
+		told that what I write would be a "Bug" in something that doesn't
+		exist yet, I don't have access to, isn't in public use yet, and I
+		can't test my code against.
+
+		The next PHP4 Beta user that sends me a "bug report" had better be
+		wearing asbestos underwear.
+
+	Modified assign(): (numerous)
+		You can now assign(BLAH,"") and get away with it. (Empty values for
+		a key outside of an array context)
+
+	Modified is_safe():
+		It now just checks to be sure the template file exists. All of the
+		other file checks have been ditched. (Speed speed speed, that's all
+		I want damn it! :)
+
+	Modified set_root(): 
+		I ditched the regexes used here in favor of substr() and ord()
+		and chr() calls. It's faster and much more accurate. See below as to
+		why this was done.
+
+	Modified get_template():
+		Speed tweek. implode( file() ) is faster than the combined fopen(),
+		fread( filesize() ), fclose()
+
+		****************************************************
+		****   WARNING WARNING WARNING WARNING WARNING	****
+		****    POSSIBLE CONFLICT IN OLDER TEMPLATES	****
+		****************************************************
+
+	Modified parse_dynamic(): Chad Cunningham, ccunning@math.ohio-state.edu
+		Now allows arbitrary whitespace before and after the beginning of
+		the <!-- BEGIN DYNAMIC BLOCK tags.  This may cause problems in
+		existing templates!  The only allowed text on the line is the BEGIN
+		and END syntax! If there's =anything= else on the line other than
+		whitespace, it'll fail.
+
+	Modified (template wide) regex use:
+
+	I went on a regex rampage. Regular Expressions are expensive and the
+	more you use them the slower your program becomes. I've been weak and
+	have been using regular expressions where they really weren't needed. To
+	increase processing speed, whenever possible, all regular expressions
+	have been ditched.  This affects set_root, parse_dynamic, clear_dynamic,
+	and parse.  (Basically, all the routines that make this class work :-)
+
+	The major change was in the parse_dynamic() routine.  This used two
+	regular expressions for every line of every template.  That was way too
+	expensive. Those two regex calls have since been replaced with a single
+	trim() on each line of the template. This greatly increases dynamic
+	template parsing speed.
+
+	The crude benchmark I set up shows that the change was definitely worth
+	it, with  10% to 20% speed increases.
+
+	Removed a few useless escapes from most of the regex's. (numerous)
+
+	Once again, I tried to replace as many regexes as possible with
+	str_replace().  Once again, no matter what build I use, str_replace
+	randomly core dumps the httpd process. (3.0.0, 3.0.5, 3.0.6, 3.0.7) I
+	left the lines there, just search for str_replace in the code and change
+	the comments if you want to try using str_replace. I'd love to hear if
+	someone has a build of PHP where this doesn't core dump Apache.
+
+
+==================================
+0.8 Changes: Apr 03 1999  08:00:00
+
+	Maintenance released. Fixed a few typos that snuck into the last
+	revision. (Mostly in areas I couldn't test, like WIN32 stuff)
+
+==================================
+0.7	Changes:
+
+	Added define_dynamic() and parse_dynamic(). (parse_dynamic() is an
+	internal method, if you call it you bought it.) See the man page for
+	more information on define_dynamic().
+
+==================================
+0.6	Changes: (never released)
+
+	Fixed a minor bug in the set_root() when used on a WIN32 box.
+
+	Removed most of the fatal exits from calls to error(). The class will
+	only exit if the get_template() method fails to load a template file.
+
+==================================
+0.5	Initial Public Release 1999/21/01 19:09:00

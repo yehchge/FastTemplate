@@ -1,0 +1,323 @@
+CHANGELOG - cls_fast_template.php
+1.6.2 Changes: 
+
+error return for capture on empty template filename.
+
+1.6.1 Changes:
+
+$template = ereg_replace ( "{([A-Za-z0-9_\.]+)}", "", $template ); - it was introduced a-z, because the regex used in the line to remove unset variables only checked for all caps, while lowercase variables are allowed by the class.
+
+var $REWRITE_TEMPLATE_PATH = array ("../",""); - this is an example, you can replace anything. The ideea behind this addition is that on visual editors, the paths from template directory is usually ../images/filename.gif or @import "../css/other.css";, but in the real world (when you call it on the site) require images/filename.gif or @import "css/other.css";. So we replace ../ with nothing. Very useful in visual editors like Adobe Dreamweaver. 
+
+==================================
+1.6.0 Changes:
+
+$IE_UTF_INCLUDE=true; -  using base href as he should. Set true if IE7 is not working
+
+Rewrite of documentation style, we hope is much more cleaner.
+
+==================================
+
+1.5.3 Changes: 16 August 2007 
+
+Niels Bugge found a bug in rewrite_src_path, in CSS files 
+it didnt support the background images style="background:url(...);"
+
+if utf file includes are done, IE is not using base href as he should. 
+Set true if IE7 is not working.
+var $IE_UTF_INCLUDE=false; (default false)
+
+ereg_replace in one place was left, now is str_replace. We still prefer ereg_replace, 
+but seems in many hosting companies are disabled.
+
+function value_defined / if (isset($field{0}) && $field{0}=='.')
+
+function parse_template /  file_get_contents($file_path) : implode("\n", file($file_path));
+
+==================================
+1.5.2 Changes: 31 December 2006 
+
+If one of template file (usually page header) contains link to external
+style file (like this <link rel="STYLESHEET" type="text/css" href="st.css">)
+teplate parser returns HTML gererated with an error.
+Live example <link rel="STYLESHEET" type="text/css" href="st.css" st.css>
+
+Removed because it deletes newline in textareas.
+TX to Martin Fasani
+$template = ereg_replace("([\n]+)", "\n", $template);
+
+var $CACHE_PATH =   '/tmp'; instead of var $CACHE_PATH =   './tmp';
+
+some other small corrections.
+
+==================================
+1.5.1 Changes: 6 June 2006 
+
+In the script ' was used instead of \” for the html code which made the javascript crash (FireFox 1.5.0.4)
+
+==================================
+1.5.0 Changes: 31 May 2006 
+
+Documentation now is in DOCS folder, we hope better documented.
+
+function rewrite_link_href_callback
+
+function rewrite_src_path - Rewrite js, css, and img src from template to a
+custom path
+
+function set_output_rewrite_src_path - Rewrite all src="template_path/file"
+found in the document, very helpful when you want to edit the work template 
+in a visual editor without any connection to the script path that will 
+summon the work template output content.
+
+function pre_filter - very helpful when we want to run some filter before
+the template being parsed
+
+FastWrite and FastPrint improved
+
+Anyway, there are a lot of improvements, documented in the DOCS folder.
+Please review it.
+Also, we have included 1.3.0 to have the possibility to view a DIFF.
+
+==================================
+1.3.0 Changes: 24 March 2005 
+
+Added DELETE_CACHE function, to delete files what is older then expire time.
+
+Added file extension to cache for example now a cache file name will be 
+62327a34b389dca70c7c15e9d81e57bd.ft (notice the extension .ft) This was
+necessary because of DELETE_CAHCE function
+
+Added include block which include another template by statement (like SSI do)
+<!--#include file="include2.html"-->
+It is usefull if you have several different templates for different parts of 
+page and you dont need to write any php code to gather all "blocks" of the page.
+Also is very helpfull from designer point of view, he will see in a visual editor te result.
+
+==================================
+1.2.0 Changes: 18 January 2005 
+
+Added FastTemplate::parse_and_return($template_name) method. Parse template and return it as string
+Can be used instead FastTemplate::parse() && FastTemplate::fetch
+
+Added FastTemplate::get_root() method. Returns root template dir. Use this method insted 
+direct access to FastTemplate::ROOT variable to follow OOP paradigm
+
+Added templates comments. Smth like {* This is a comment *} This will be parsed and
+get out from final page.
+
+Added support for inline dynamic blocks.
+In this new way, now lines are parsed and if needed, then will be corrected to put it
+new lines, to avoid errors <!-- BEGIN or END -->.
+
+Added support for access object fields using get() or getId() methods from templates
+(For ex. {Object.field} = Object->get('field')  && {Object.id} = Object->getId() )
+It is something like using JavaBeans in JSP
+
+New FastTemplate::define() - now supports array and name and value as parameter
+
+Added FastTemplate::assign_from_array($array, $keys)
+Assign template variables from assoc. array with same name.  For ex.
+FastTemplate::assign_from_array($_SERVER, array('SERVER_NAME','QUERY_SRING'));
+
+==================================
+1.1.9 Changes: 28 December 2004 
+
+var $CACHING = ""; was added, missed in 1.1.8
+
+FastWrite function was modified, added an IF for empty templates.
+
+function setCacheTime($time), this will overwrite cache defined in 
+var $UPDT_TIME  =   '60'; Usage is now 
+// ex. CACHE will be used
+$ft->setCacheTime(300);
+$ft->USE_CACHE();
+So for example in some pages you want to use default value, 60 second,
+but on the other page you want 300 seconds.
+
+function self_script was modified, $fname = $_SERVER['REQUEST_URI'];
+ex: http://yourdomain.com/products.php?id=13 was ok, but
+http://yourdomain.com/products.php/productname/13/ cached same page.
+Now cache is working right.
+      
+Some ereg_replace was left and changed to str_replace
+
+Other minor cosmetics on source
+
+==================================
+1.1.8 Changes: 3 November 2004 
+
+FastWrite function was cleaned up. In some cases not worked.
+
+ereg_replace for some unknown reason was uncommented in 1.1.7, now is OK again.
+// $template = ereg_replace("{([A-Z0-9_]+)}","",$template);
+$template = str_replace("{([A-Z0-9_]+)}","",$template); // GRAFX
+
+==================================
+1.1.7 Changes: 12 August 2004 
+
+function self_script () was improved by P Pavlovic ppavlovic@mail.ru
+Problem with current function is that ignores GET parameters and it 
+serves same cached page for different GET parameters. With this modification,
+this problem is overcomed.
+
+Set internal character encoding to UTF-8. We added a header which make that 
+every header to be transofrmed into UTF-8. This is not a Fast Template function, 
+but help to send in all files a header and is work very well. 
+We are looking for testers!!! If you don't want this features, uncomment this line
+header("Content-Type: text/html; charset=UTF-8"); 
+
+var $CACHE_PATH =   './cache'; was renamed to var $CACHE_PATH =   './tmp';
+
+==================================
+1.1.6 Changes: 29 April 2004 
+
+get_magic_quotes_gpc() problem on some servers are fixed. Seems that some 
+servers not read magic quotes correcttly and template files are messed up.
+
+==================================
+1.1.5 Changes: 8 March 2004 
+
+Allyson Francisco de Paula Reis came out with some improvements on cache function. 
+Wilfried Trinkl added Fast Write function, usefull when you want to write to a file. 
+Some clean-up on examples and on FastWrite and Language Assign new examples. 
+
+==================================
+1.1.4 Changes: 18 February 2004 
+
+We have found an older modification of Allyson Francisco de Paula Reis, 
+who added "Cache functions". We merge into our version. 
+
+==================================
+1.1.3 Changes: 05 January 2004 
+
+used str_replace instead of ereg_replace, this latest is not installed 
+on a lot of servers and give out error.
+
+added Pattern Assign - when variables or constants are the same as the 
+template keys, these functions may be used as they are. Using these 
+functions, can help you reduce the number of the assign functions in the 
+php files, very useful for language files
+
+Changed back to .html files all .tpl, is more easier to edit to dummy users. 
+
+Renamed class.FastTemplate.php3 to cls_fast_template.php 
+
+modified debug module to Level 1 is showing all info + added WARNINGS, 
+Level 2 will popup the window only if WARNINGS are present, very helpfull 
+only when you want to see BUGS on your page
+
+==================================
+1.1.2 Changes: 06 July 2002 - Added debug console, silient removal 
+of not-assigned dynamic blocks, ability of including php code into 
+templates 
+
+==================================
+1.1.1 Changes: 24 April 2002 - Adopted for PHP4 
+
+==================================
+1.1.0 Changes: Jun 27 1999  13:32:00
+
+	This is a major update. Version jump due to finally getting my code
+	converted over to CVS.
+
+	Added clear_dynamic():
+		Ran into a few instances where a dynamic block was not going to be
+		used, so now there's a way to remove it from a template.
+
+	Added get_assigned(): Christian Brandel cbrandel@gmx.de
+		Returns the value of a variable previously set using assign(), if
+		any.
+
+	Modified FastPrint():
+		FastPrint would have been an illegal construct in PHP4/Zend. Fixed. 
+		Personal Note: I don't have access to the PHP4 beta even though I've
+		asked repeatedly, so pardon me if I get a bit irritated when I'm
+		told that what I write would be a "Bug" in something that doesn't
+		exist yet, I don't have access to, isn't in public use yet, and I
+		can't test my code against.
+
+		The next PHP4 Beta user that sends me a "bug report" had better be
+		wearing asbestos underwear.
+
+	Modified assign(): (numerous)
+		You can now assign(BLAH,"") and get away with it. (Empty values for
+		a key outside of an array context)
+
+	Modified is_safe():
+		It now just checks to be sure the template file exists. All of the
+		other file checks have been ditched. (Speed speed speed, that's all
+		I want damn it! :)
+
+	Modified set_root(): 
+		I ditched the regexes used here in favor of substr() and ord()
+		and chr() calls. It's faster and much more accurate. See below as to
+		why this was done.
+
+	Modified get_template():
+		Speed tweek. implode( file() ) is faster than the combined fopen(),
+		fread( filesize() ), fclose()
+
+		****************************************************
+		****   WARNING WARNING WARNING WARNING WARNING	****
+		****    POSSIBLE CONFLICT IN OLDER TEMPLATES	****
+		****************************************************
+
+	Modified parse_dynamic(): Chad Cunningham, ccunning@math.ohio-state.edu
+		Now allows arbitrary whitespace before and after the beginning of
+		the <!-- BEGIN DYNAMIC BLOCK tags.  This may cause problems in
+		existing templates!  The only allowed text on the line is the BEGIN
+		and END syntax! If there's =anything= else on the line other than
+		whitespace, it'll fail.
+
+	Modified (template wide) regex use:
+
+	I went on a regex rampage. Regular Expressions are expensive and the
+	more you use them the slower your program becomes. I've been weak and
+	have been using regular expressions where they really weren't needed. To
+	increase processing speed, whenever possible, all regular expressions
+	have been ditched.  This affects set_root, parse_dynamic, clear_dynamic,
+	and parse.  (Basically, all the routines that make this class work :-)
+
+	The major change was in the parse_dynamic() routine.  This used two
+	regular expressions for every line of every template.  That was way too
+	expensive. Those two regex calls have since been replaced with a single
+	trim() on each line of the template. This greatly increases dynamic
+	template parsing speed.
+
+	The crude benchmark I set up shows that the change was definitely worth
+	it, with  10% to 20% speed increases.
+
+	Removed a few useless escapes from most of the regex's. (numerous)
+
+	Once again, I tried to replace as many regexes as possible with
+	str_replace().  Once again, no matter what build I use, str_replace
+	randomly core dumps the httpd process. (3.0.0, 3.0.5, 3.0.6, 3.0.7) I
+	left the lines there, just search for str_replace in the code and change
+	the comments if you want to try using str_replace. I'd love to hear if
+	someone has a build of PHP where this doesn't core dump Apache.
+
+
+==================================
+0.8 Changes: Apr 03 1999  08:00:00
+
+	Maintenance released. Fixed a few typos that snuck into the last
+	revision. (Mostly in areas I couldn't test, like WIN32 stuff)
+
+==================================
+0.7	Changes:
+
+	Added define_dynamic() and parse_dynamic(). (parse_dynamic() is an
+	internal method, if you call it you bought it.) See the man page for
+	more information on define_dynamic().
+
+==================================
+0.6	Changes: (never released)
+
+	Fixed a minor bug in the set_root() when used on a WIN32 box.
+
+	Removed most of the fatal exits from calls to error(). The class will
+	only exit if the get_template() method fails to load a template file.
+
+==================================
+0.5	Initial Public Release 1999/21/01 19:09:00

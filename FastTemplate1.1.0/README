@@ -1,0 +1,37 @@
+
+
+class.FastTemplate.php3
+
+Version 1.1.0
+
+Files in this distribution:
+
+FastTemplate-1.1.0/
+FastTemplate-1.1.0/README                       <- This file
+FastTemplate-1.1.0/class.FastTemplate.php3      <- The PHP class library
+FastTemplate-1.1.0/example_1.phtml
+FastTemplate-1.1.0/example_2.phtml
+FastTemplate-1.1.0/example_3.phtml
+FastTemplate-1.1.0/dynamic_example.phtml
+
+FastTemplate-1.1.0/docs/                        <- Documentation Dir
+FastTemplate-1.1.0/docs/FastTemplate.3          <- Unix man page
+FastTemplate-1.1.0/docs/FastTemplate.html       <- HTML documentation
+
+FastTemplate-1.1.0/templates/                   <- Example Template files
+FastTemplate-1.1.0/templates/begin.tpl
+FastTemplate-1.1.0/templates/header.tpl
+FastTemplate-1.1.0/templates/main.tpl
+FastTemplate-1.1.0/templates/row.tpl
+FastTemplate-1.1.0/templates/test.tpl
+FastTemplate-1.1.0/templates/footer.tpl
+FastTemplate-1.1.0/templates/htaccess.tpl
+FastTemplate-1.1.0/templates/middle.tpl
+FastTemplate-1.1.0/templates/table.tpl
+
+Installation: Drop this into the directory you're working in? Failing that,
+copy this file to the location specified in your INCLUDE_PATH directive in
+the php3.ini file. 
+
+Questions, comments, bug reports to : cdi@thewebmasters.net
+

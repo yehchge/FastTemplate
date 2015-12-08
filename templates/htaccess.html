@@ -1,0 +1,31 @@
+AuthUserFile {AUTH_USER_FILE}
+<br>
+AuthGroupFile {AUTH_GROUP_FILE}
+<br>
+AuthName {AUTH_NAME}
+<br>
+AuthType {AUTH_TYPE}
+<br>
+Options {OPTIONS}<br>
+Sub Name {AUTH_NAME}
+
+<Limit {METHODS}>
+<br>
+<br>
+{USER_LIMITS}
+</Limit>
+
+<Files ~ "(.*?)\.ht(access|passwd)$">
+<br>
+order deny,allow
+deny from all
+</Files>
+
+<p><br>
+  ErrorDocument 401 {ERROR_401}
+    <br>
+  ErrorDocument 402 {ERROR_402}<br>
+  ErrorDocument 403 {ERROR_403}<br>
+  ErrorDocument 404 {ERROR_404}
+  <br>
+  ErrorDocument 500 {ERROR_500} </p>

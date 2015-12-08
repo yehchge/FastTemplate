@@ -1,0 +1,871 @@
+.rn '' }`
+''' $RCSfile: FastTemplate.3,v $$Revision: 1.3 $$Date: 1999/06/27 20:38:18 $
+'''
+''' $Log: FastTemplate.3,v $
+''' Revision 1.3  1999/06/27 20:38:18  joe
+''' *** empty log message ***
+'''
+'''
+.de Sh
+.br
+.if t .Sp
+.ne 5
+.PP
+\fB\\$1\fR
+.PP
+..
+.de Sp
+.if t .sp .5v
+.if n .sp
+..
+.de Ip
+.br
+.ie \\n(.$>=3 .ne \\$3
+.el .ne 3
+.IP "\\$1" \\$2
+..
+.de Vb
+.ft CW
+.nf
+.ne \\$1
+..
+.de Ve
+.ft R
+
+.fi
+..
+'''
+'''
+'''     Set up \*(-- to give an unbreakable dash;
+'''     string Tr holds user defined translation string.
+'''     Bell System Logo is used as a dummy character.
+'''
+.tr \(*W-|\(bv\*(Tr
+.ie n \{\
+.ds -- \(*W-
+.ds PI pi
+.if (\n(.H=4u)&(1m=24u) .ds -- \(*W\h'-12u'\(*W\h'-12u'-\" diablo 10 pitch
+.if (\n(.H=4u)&(1m=20u) .ds -- \(*W\h'-12u'\(*W\h'-8u'-\" diablo 12 pitch
+.ds L" ""
+.ds R" ""
+'''   \*(M", \*(S", \*(N" and \*(T" are the equivalent of
+'''   \*(L" and \*(R", except that they are used on ".xx" lines,
+'''   such as .IP and .SH, which do another additional levels of
+'''   double-quote interpretation
+.ds M" """
+.ds S" """
+.ds N" """""
+.ds T" """""
+.ds L' '
+.ds R' '
+.ds M' '
+.ds S' '
+.ds N' '
+.ds T' '
+'br\}
+.el\{\
+.ds -- \(em\|
+.tr \*(Tr
+.ds L" ``
+.ds R" ''
+.ds M" ``
+.ds S" ''
+.ds N" ``
+.ds T" ''
+.ds L' `
+.ds R' '
+.ds M' `
+.ds S' '
+.ds N' `
+.ds T' '
+.ds PI \(*p
+'br\}
+.\"	If the F register is turned on, we'll generate
+.\"	index entries out stderr for the following things:
+.\"		TH	Title 
+.\"		SH	Header
+.\"		Sh	Subsection 
+.\"		Ip	Item
+.\"		X<>	Xref  (embedded
+.\"	Of course, you have to process the output yourself
+.\"	in some meaninful fashion.
+.if \nF \{
+.de IX
+.tm Index:\\$1\t\\n%\t"\\$2"
+..
+.nr % 0
+.rr F
+.\}
+.TH FASTTEMPLATE 1 "PHP 3.0.6" "27/Jun/99" " Contributed PHP Docs "
+.UC
+.if n .hy 0
+.if n .na
+.ds C+ C\v'-.1v'\h'-1p'\s-2+\h'-1p'+\s0\v'.1v'\h'-1p'
+.de CQ          \" put $1 in typewriter font
+.ft CW
+'if n "\c
+'if t \\&\\$1\c
+'if n \\&\\$1\c
+'if n \&"
+\\&\\$2 \\$3 \\$4 \\$5 \\$6 \\$7
+'.ft R
+..
+.\" @(#)ms.acc 1.5 88/02/08 SMI; from UCB 4.2
+.	\" AM - accent mark definitions
+.bd B 3
+.	\" fudge factors for nroff and troff
+.if n \{\
+.	ds #H 0
+.	ds #V .8m
+.	ds #F .3m
+.	ds #[ \f1
+.	ds #] \fP
+.\}
+.if t \{\
+.	ds #H ((1u-(\\\\n(.fu%2u))*.13m)
+.	ds #V .6m
+.	ds #F 0
+.	ds #[ \&
+.	ds #] \&
+.\}
+.	\" simple accents for nroff and troff
+.if n \{\
+.	ds ' \&
+.	ds ` \&
+.	ds ^ \&
+.	ds , \&
+.	ds ~ ~
+.	ds ? ?
+.	ds ! !
+.	ds /
+.	ds q
+.\}
+.if t \{\
+.	ds ' \\k:\h'-(\\n(.wu*8/10-\*(#H)'\'\h"|\\n:u"
+.	ds ` \\k:\h'-(\\n(.wu*8/10-\*(#H)'\`\h'|\\n:u'
+.	ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'^\h'|\\n:u'
+.	ds , \\k:\h'-(\\n(.wu*8/10)',\h'|\\n:u'
+.	ds ~ \\k:\h'-(\\n(.wu-\*(#H-.1m)'~\h'|\\n:u'
+.	ds ? \s-2c\h'-\w'c'u*7/10'\u\h'\*(#H'\zi\d\s+2\h'\w'c'u*8/10'
+.	ds ! \s-2\(or\s+2\h'-\w'\(or'u'\v'-.8m'.\v'.8m'
+.	ds / \\k:\h'-(\\n(.wu*8/10-\*(#H)'\z\(sl\h'|\\n:u'
+.	ds q o\h'-\w'o'u*8/10'\s-4\v'.4m'\z\(*i\v'-.4m'\s+4\h'\w'o'u*8/10'
+.\}
+.	\" troff and (daisy-wheel) nroff accents
+.ds : \\k:\h'-(\\n(.wu*8/10-\*(#H+.1m+\*(#F)'\v'-\*(#V'\z.\h'.2m+\*(#F'.\h'|\\n:u'\v'\*(#V'
+.ds 8 \h'\*(#H'\(*b\h'-\*(#H'
+.ds v \\k:\h'-(\\n(.wu*9/10-\*(#H)'\v'-\*(#V'\*(#[\s-4v\s0\v'\*(#V'\h'|\\n:u'\*(#]
+.ds _ \\k:\h'-(\\n(.wu*9/10-\*(#H+(\*(#F*2/3))'\v'-.4m'\z\(hy\v'.4m'\h'|\\n:u'
+.ds . \\k:\h'-(\\n(.wu*8/10)'\v'\*(#V*4/10'\z.\v'-\*(#V*4/10'\h'|\\n:u'
+.ds 3 \*(#[\v'.2m'\s-2\&3\s0\v'-.2m'\*(#]
+.ds o \\k:\h'-(\\n(.wu+\w'\(de'u-\*(#H)/2u'\v'-.3n'\*(#[\z\(de\v'.3n'\h'|\\n:u'\*(#]
+.ds d- \h'\*(#H'\(pd\h'-\w'~'u'\v'-.25m'\f2\(hy\fP\v'.25m'\h'-\*(#H'
+.ds D- D\\k:\h'-\w'D'u'\v'-.11m'\z\(hy\v'.11m'\h'|\\n:u'
+.ds th \*(#[\v'.3m'\s+1I\s-1\v'-.3m'\h'-(\w'I'u*2/3)'\s-1o\s+1\*(#]
+.ds Th \*(#[\s+2I\s-2\h'-\w'I'u*3/5'\v'-.3m'o\v'.3m'\*(#]
+.ds ae a\h'-(\w'a'u*4/10)'e
+.ds Ae A\h'-(\w'A'u*4/10)'E
+.ds oe o\h'-(\w'o'u*4/10)'e
+.ds Oe O\h'-(\w'O'u*4/10)'E
+.	\" corrections for vroff
+.if v .ds ~ \\k:\h'-(\\n(.wu*9/10-\*(#H)'\s-2\u~\d\s+2\h'|\\n:u'
+.if v .ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'\v'-.4m'^\v'.4m'\h'|\\n:u'
+.	\" for low resolution devices (crt and lpr)
+.if \n(.H>23 .if \n(.V>19 \
+\{\
+.	ds : e
+.	ds 8 ss
+.	ds v \h'-1'\o'\(aa\(ga'
+.	ds _ \h'-1'^
+.	ds . \h'-1'.
+.	ds 3 3
+.	ds o a
+.	ds d- d\h'-1'\(ga
+.	ds D- D\h'-1'\(hy
+.	ds th \o'bp'
+.	ds Th \o'LP'
+.	ds ae ae
+.	ds Ae AE
+.	ds oe oe
+.	ds Oe OE
+.\}
+.rm #[ #] #H #V #F C
+.SH "NAME"
+FastTemplate 1.1.0 \- PHP extension for mamanging templates and performing variable interpolation.
+.SH "SYNOPSIS"
+.PP
+.Vb 5
+\&    include("class.FastTemplate.php3");
+\&    $tpl = FastTemplate("/path/to/templates");
+\&    $tpl->define( array(    main    => "main.tpl",
+\&                            row     => "table_row.tpl",
+\&                            all     => "table_all.tpl"  ));
+.Ve
+.Vb 3
+\&    $tpl->assign(TITLE, "I am the title.");
+\&    $defaults = ( array(    FONT    => '<font size=+2 face=helvetica>',
+\&                            EMAIL   => 'cdi@thewebmasters.net' ));
+.Ve
+.Vb 5
+\&    $tpl->assign($defaults);
+\&    $tpl->parse(ROWS, ".row");    // the '.' appends to ROWS
+\&    $tpl->parse(CONTENT, array("row", "all"));
+\&    $tpl->parse(CONTENT, "main");
+\&    $tpl->FastPrint(CONTENT);
+.Ve
+.Vb 2
+\&    $raw = $tpl->fetch("CONTENT");
+\&    echo "$raw\en";
+.Ve
+.SH "DESCRIPTION"
+\fBWhat is a template?\fR
+.PP
+A template is a text file with variables in it.  When a template is parsed, the 
+variables are interpolated to text.  (The text can be a few bytes or a few hundred kilobytes.)
+Here is a simple template with one variable ('{NAME}'):
+.PP
+.Vb 1
+\&    Hello {NAME}.  How are you?
+.Ve
+\fBWhen are templates useful?\fR
+.PP
+Templates are very useful for CGI programming, because adding HTML to your
+PHP code clutters your code and forces you to do any HTML modifications.  By
+putting all of your HTML in seperate template files, you can let a graphic
+or interface designer change the look of your application without having to
+bug you, or let them muck around in your PHP code.
+.PP
+\fBWhy use FastTemplate?\fR
+.PP
+\fBSpeed\fR
+.PP
+FastTemplate parses with a single regular expression.  It just does simple
+variable interpolation (i.e. there is no logic that you can add to templates
+\- you keep the logic in the code).  That's why it's has \*(L'Fast\*(R' in it's name!
+.PP
+\fBFlexibility\fR
+.PP
+The API is robust and flexible, and allows you to build very complex HTML
+documents/interfaces. It is also completely written in PHP and (should) work
+on Unix or NT. Also, it isn't restricted to building HTML documents -- it
+could be used to build any ascii based document (postscript, XML, email \-
+anything).
+.PP
+\fBWhat are the steps to use FastTemplate?\fR
+.PP
+The main steps are:
+.PP
+.Vb 4
+\&    1. define
+\&    2. assign 
+\&    3. parse
+\&    4. FastPrint
+.Ve
+These are outlined in detail in CORE METHODS below.
+.SH "CORE METHODS"
+.Sh "\fIdefine\fR\|( array( key,value pairs) )"
+The method \fIdefine()\fR maps a template filename to a (usually shorter) name;
+.PP
+.Vb 1
+\&    $tpl = new FastTemplate("/path/to/templates");
+.Ve
+.Vb 2
+\&    $tpl->define( array(    main    => "main.tpl",
+\&                            footer  => "footer.tpl" ));
+.Ve
+This new name is the name that you will use to refer to the templates.  Filenames
+should not appear in any place other than a \fIdefine()\fR.
+.PP
+(Note: This is a required step!  This may seem like an annoying extra
+step when you are dealing with a trivial example like the one above,
+but when you are dealing with dozens of templates, it is very handy to
+refer to templates with names that are indepandant of filenames.)
+.PP
+\s-1TIP\s0: Since \fIdefine()\fR does not actually load the templates, it is faster and more legible to define all the templates 
+with one call to \fIdefine()\fR.
+.Sh "\fIdefine_nofile()\fR    alias: \fIdefine_raw()\fR"
+\fB\s-1THESE\s0 \s-1METHODS\s0 \s-1ARE\s0 \s-1NOT\s0 \s-1PORTED\s0 \s-1TO\s0 \s-1THE\s0 \s-1PHP\s0 \s-1VERSION\s0\fR
+.PP
+And probably never will be.  The purpose of this class is to \fBeliminate\fR
+\s-1HTML\s0 from your \s-1PHP\s0 code, not to create new ways of adding it back in.
+.Sh "\fIdefine_dynamic\fR\|($Macro, \f(CW$ParentName\fR)"
+Nino Martincevic, don@agi.de, emailed me with a question about doing
+something like this, and I thought it was a such a cool idea I immediately
+sat down and cranked it out...
+.PP
+You can define dynamic content within a static template. (Lists) Here's an
+example of \fIdefine_dynamic()\fR;
+.PP
+.Vb 1
+\&    $tpl = new FastTemplate("./templates");
+.Ve
+.Vb 2
+\&    $tpl->define(    array( main  =>  "main.tpl",
+\&                            table =>  "dynamic.tpl" ));
+.Ve
+.Vb 1
+\&    $tpl->define_dynamic( "row" , "table" );
+.Ve
+This tells FastTemplate that buried in the \*(L"table\*(R" template is a dynamic
+block, named \*(L"row\*(R".  In older verions of FastTemplate (pre 0.7) this \*(L"row\*(R"
+template would have been defined as it's own file.  Here's how a dynamic
+block appears within a template file;
+.PP
+.Vb 2
+\&    <!-- NAME: dynamic.tpl -->
+\&    <table>
+.Ve
+.Vb 6
+\&    <!-- BEGIN DYNAMIC BLOCK: row -->
+\&    <tr>
+\&    <td>{NUMBER}</td>
+\&    <td>{BIG_NUMBER}</td>
+\&    </tr>
+\&    <!-- END DYNAMIC BLOCK: row -->
+.Ve
+.Vb 2
+\&    </table>
+\&    <!-- END: dynamic.tpl -->
+.Ve
+The syntax of your \s-1BEGIN\s0 and \s-1END\s0 lines needs to be \s-1VERY\s0 exact.  It is case
+sensitive.  The code block begins on a new line all by itself.  There cannot
+be \s-1ANY\s0 \s-1OTHER\s0 \s-1TEXT\s0 on the line with the \s-1BEGIN\s0 or \s-1END\s0 statement. (although you
+can have any amount of whitespace before or after)  It must be
+in the format shown;
+.PP
+.Vb 1
+\&    <!-- BEGIN DYNAMIC BLOCK: handle_name -->
+.Ve
+The line must be exact, right down to the spacing of the characters. The
+same is true for your \s-1END\s0 line.  The \s-1BEGIN\s0 and \s-1END\s0 lines cannot span
+multiple lines.  Now when you call the \fIparse()\fR method, FastTemplate will
+automatically spot the dynamic block, strip it out, and use it exactly as if
+you had defined it as a stand-alone template.  No additional work is
+required on your part to make it work \- just define it, and FastTemplate
+will do the rest.  Included with this archive should have been a file named
+\fBdefine_dynamic.phtml\fR which shows a working example of a dynamic block.
+.PP
+There are a few rules when using dynamic blocks \- dynamic blocks should not
+be nested inside other dynamic blocks \- strange things \s-1WILL\s0 occur. You \-can-
+have more than one nested block of code in a page, but of course, no two
+blocks can share the same defined handle.  The error checking for
+\fIdefine_dynamic()\fR is miniscule at best. If you define a dynamic block and
+FastTemplate fails to find it, no errors will be generated, just really
+weird output.  (FastTemplate will not append the dynamic data to the retured
+output) Since the \s-1BEGIN\s0 and \s-1END\s0 lines are stripped out of the parsed
+results, if you ever see your \s-1BEGIN\s0 or \s-1END\s0 line in the parsed output, that
+means that FastTemplate failed to find that dynamic block.
+.Sh "\fIclear_dynamic\fR\|($Macro)"
+This provides a method to remove the dynamic block definition from the
+parent macro provided that you haven't already parsed the template.  Using
+our example above:
+.PP
+.Vb 1
+\&    $tpl->clear_dynamic("row");
+.Ve
+Would completely strip all of the \fBunparsed\fR dynamic blocks named \*(L"row\*(R"
+from the parent template.  This method won't do a thing if the template has
+already been parsed! (Because the required \s-1BEGIN\s0 and \s-1END\s0 lines have been
+removed through the parsing) This method works well when you are accessing a
+database, and your \*(L"rows\*(R" may or may not return anything to print to the
+template.  If your database query doesn't return anything, you can now strip
+out the rows you've set up for the results. (Gee, maybe I ran into this
+problem myself ? :\-)
+.Sh "\fIassign\fR\|( (key,value pair) or ( \fIarray\fR\|(key value pairs) )"
+The method \fIassign()\fR assigns values for variables.  In order for a variable
+in a template to be interpolated it must be assigned.  There are two forms
+which have some important differences. The simple form, is to accept an
+array and copy all the key/value pairs into an array in FastTemplate.  There
+is only one array in FastTemplate, so assigning a value for the same key will
+overwrite that key.
+.PP
+.Vb 2
+\&    $tpl->assign(TITLE    => "king kong");
+\&    $tpl->assign(TITLE    => "godzilla");    // overwrites "king kong"
+.Ve
+.Sh "\fIparse\fR\|(\s-1RETURN\s0, FileHandle(s) )"
+The parse function is the main function in FastTemplate. It accepts a new
+key value pair where the key is the \s-1TARGET\s0 and the values are the \s-1SOURCE\s0
+templates.  There are three forms this can be in:
+.PP
+.Vb 3
+\&    $tpl->parse(MAIN, "main");                     // regular
+\&    $tpl->parse(MAIN, array ( "table", "main") );  // compound
+\&    $tpl->parse(MAIN, ".row");                     // append
+.Ve
+In the regular version, the template named \*(L"main\*(R" is loaded if it hasn't
+been already, all the variables are interpolated, and the result is then
+stored in FastTemplate as the value \s-1MAIN\s0.  If the variable \*(L'{\s-1MAIN\s0}\*(R' shows up
+in a later template, it will be interpolated to be the value of the parsed
+\*(L"main\*(R" template.  This allows you to easily nest templates, which brings us
+to the compound style.
+.PP
+The compound style is designed to make it easier to nest templates.  The
+following are equivalent:
+.PP
+.Vb 2
+\&    $tpl->parse(MAIN, "table");
+\&    $tpl->parse(MAIN, ".main");
+.Ve
+.Vb 1
+\&    // is the same as:
+.Ve
+.Vb 2
+\&    $tpl->parse(MAIN, array("table", "main"));
+\&    // this form saves function calls and makes your code cleaner
+.Ve
+It is important to note that when you are using the compound form, each
+template after the first, must contain the variable that you are parsing the
+results into.  In the above example, \*(L'main\*(R' must contain the variable
+\&'{\s-1MAIN\s0}\*(R', as that is where the parsed results of \*(L'table\*(R' is stored.  If
+\&'main\*(R' does not contain the variable \*(L'{\s-1MAIN\s0}\*(R' then the parsed results of
+\&'table\*(R' will be lost.
+.PP
+The append style allows you to append the parsed results to the target
+variable.  Placing a leading dot \fB.\fR before a defined file handle tells
+FastTemplate to append the parsed results of this template to the returned
+results.  This is most useful when building tables that have an dynamic
+number of rows \- such as data from a database query.
+.Sh "\fIstrict()\fR"
+When \fIstrict()\fR is on (it is on by default) all variables found during template parsing that are unresolved
+have a warning printed to \s-1STDERR\s0;
+.PP
+[FastTemplate] Warning: no value found for variable: \s-1SOME_VAR\s0
+.PP
+Also, the variables will be left in the output document. This was done for
+two reasons: to allow for parsing to be done in stages (i.e. multiple
+passes), and to make it easier to identify undefined variables since they
+appear in the parsed output. If you want to replace unknown variables with
+an empty string, see: \fIno_strict()\fR.
+.PP
+Note: \s-1STDERR\s0 output should be captured and logged by the webserver. With
+apache (and unix!) you can tail the error log during development to see the
+results as in;
+.PP
+.Vb 1
+\&        tail -f /var/log/httpd/error_log
+.Ve
+.Sh "\fIno_strict()\fR"
+Turns off warning messages about unresolved template variables. A call to
+\fIno_strict()\fR is required to replace unknown variables with an empty string. 
+By default, all instances of FastTemplate behave as is \fIstrict()\fR was called. 
+Also, \fIno_strict()\fR must be set for each instance of FastTemplate;
+.PP
+.Vb 2
+\&    $tpl = new FastTemplate("/path/to/templates");
+\&    $tpl->no_strict();
+.Ve
+.Sh "\fIFastPrint\fR\|(\s-1HANDLE\s0)"
+The method \fIFastPrint()\fR prints the contents of the named variable.  If no
+variable is given, then it prints the last variable that was used in a call
+to \fIparse()\fR which I find is a reasonable default.
+.PP
+.Vb 2
+\&    $tpl->FastPrint();       // continuing from the last example, would
+\&                             // print the value of MAIN
+.Ve
+.Vb 1
+\&    $tpl->FastPrint("MAIN"); // ditto
+.Ve
+This method is provided for convenience.  If you need to print somewhere
+else (a socket, file handle) you would want to \fIfetch()\fR a reference to the
+data first:
+.PP
+.Vb 2
+\&    $data = $tpl->fetch("MAIN");
+\&    fwrite($fd, $data);     // save to a file
+.Ve
+.SH "OTHER METHODS"
+.Sh "\fIfetch\fR\|(\s-1HANDLE\s0)"
+Returns the raw data from a parsed handle.
+.PP
+.Vb 4
+\&    $tpl->parse(CONTENT, "main");
+\&    $content = $tpl->fetch("CONTENT");
+\&    print $content;        // print to STDOUT
+\&    fwrite($fd, $content); // write to filehandle
+.Ve
+.Sh "\fIget_assigned\fR\|($Var)    Christian Brandel cbrandel@gmx.de"
+This method will return the value of a variable that has been set via
+\fIassign()\fR.  This allows you to easily pass variables around within functions
+by using the FastTemplate class to handle \*(L"globalization\*(R" of the variables. 
+For example;
+.PP
+.Vb 3
+\&    $tpl->assign(  array(  TITLE    =>    $title,
+\&                           BGCOLOR  =>    $bgColor,
+\&                           TEXT     =>    $textColor ));
+.Ve
+.Vb 2
+\&    (sometime later...)
+\&    $bgColor = $tpl->get_assigned(BGCOLOR);
+.Ve
+.Sh "\fIclear()\fR"
+Note: All of the \fIclear()\fR functions are for use anywhere where your scripts
+are persistant.  They generally aren't needed if you are writing \s-1CGI\s0
+scripts.
+.PP
+\fIclear()\fR Clears the internal references that store data passed to \fIparse()\fR. 
+\fIclear()\fR accepts individual references, or array references as arguments.
+.PP
+Often \fIclear()\fR is at the end of a script:
+.PP
+.Vb 2
+\&    $tpl->FastPrint("MAIN");
+\&    $tpl->clear("MAIN");
+.Ve
+.Vb 1
+\&    or
+.Ve
+.Vb 3
+\&    $tpl->FastPrint("MAIN");
+\&    $tpl->FastPrint("CONTENT");
+\&    $tpl->clear(array("MAIN","CONTENT"));
+.Ve
+If called with no arguments, removes \s-1ALL\s0 references that have been set via
+\fIparse()\fR.
+.Sh "\fIclear_parse()\fR"
+See: \fIclear()\fR
+.Sh "\fIclear_href\fR\|(\s-1KEY\s0)"
+Removes a given reference from the list of refs that is built using:
+.PP
+.Vb 1
+\&    $tpl->assign(KEY = val);
+.Ve
+If called with no arguments, it removes all references from the array.
+.PP
+(Same as \fIclear_assign()\fR )
+.PP
+.Vb 2
+\&    $tpl->assign(    array(    MOVIE  =>  "The Avengers",
+\&                               RATE   =>  "Sucked"    ));
+.Ve
+.Vb 2
+\&    $tpl->clear_href("MOVIE");
+\&    // Now only {RATE} exists in the assign() array
+.Ve
+.Sh "\fIclear_define()\fR"
+Clears the internal list that stores data passed to:
+.PP
+.Vb 1
+\&    $tpl->define();
+.Ve
+Note: The hash that holds the loaded templates is not touched with this
+method.  ( See: \fIclear_tpl()\fR ) Accepts a single file handle, an array of file
+handles, or nothing as arguments. If no argument is given, it clears \s-1ALL\s0
+file handles.
+.PP
+.Vb 3
+\&    $tpl->define( array( MAIN => "main.tpl",
+\&                         BODY => "body.tpl",
+\&                         FOOT => "foot.tpl"  ));
+.Ve
+.Vb 1
+\&    // some code here
+.Ve
+.Vb 1
+\&    $tpl->clear_define("MAIN");
+.Ve
+.Sh "\fIclear_tpl()\fR"
+Clears the internal array that stores the contents of the templates.  (If
+they have been loaded) If you are having problems with template changes not
+being reflected, try adding this method to your script.
+.PP
+.Vb 2
+\&    $tpl->define(MAIN,"main.tpl" );
+\&    // assign(), parse() etc etc...
+.Ve
+.Vb 1
+\&    $tpl->clear_tpl(MAIN);    // Loaded template now unloaded.
+.Ve
+.Sh "\fIclear_all()\fR"
+Cleans the module of any data, except for the \s-1ROOT\s0 directory.  Equivalent to:
+.PP
+.Vb 4
+\&    $tpl->clear_define();
+\&    $tpl->clear_href();
+\&    $tpl->clear_tpl();
+\&    $tpl->clear_parse();
+.Ve
+In fact, that's exactly what it does.
+.Sh "Variables"
+A variable is defined as:
+.PP
+.Vb 1
+\&    {([A-Z0-9_]+)}
+.Ve
+This means, that a variable must begin with a curly brace \*(L'{\*(R'.  The second
+and remaining characters must be uppercase letters or digits \*(L'A\-Z0-9\*(R'. 
+Remaining characters can include an underscore.  The variable is terminated
+by a closing curly brace \*(L'}\*(R'.
+.PP
+For example, the following are valid variables:
+.PP
+.Vb 3
+\&    {FOO}
+\&    {F123F}
+\&    {TOP_OF_PAGE}
+.Ve
+.Sh "Variable Interpolation (Template Parsing)"
+If a variable cannot be resolved to anything, a warning is printed to
+\s-1STDERR\s0. See \fIstrict()\fR and \fIno_strict()\fR for more info.
+.PP
+Some examples will make this clearer.
+.PP
+.Vb 1
+\&    Assume:
+.Ve
+.Vb 16
+\&    $FOO = "foo";
+\&    $BAR = "bar";
+\&    $ONE = "1";
+\&    $TWO = "2";    
+\&    $UND = "_";
+\&    
+\&    Variable    Interpolated/Parsed
+\&    ------------------------------------------------
+\&    {FOO}            foo    
+\&    {FOO}-{BAR}      foo-bar
+\&    {ONE_TWO}        {ONE_TWO} // {ONE_TWO} is undefined!    
+\&    {ONE}{UND}{TWO}  1_2
+\&    ${FOO}           $foo
+\&    $25,000          $25,000
+\&    {foo}            {foo}     // Ignored, it's not valid, nor will it
+\&                               // generate any error messages.
+.Ve
+.Sh "\s-1FULL\s0 \s-1EXAMPLE\s0"
+This example will build an \s-1HTML\s0 page that will consist of a table.  The
+table will have 3 numbered rows. The first step is to decide what templates
+we need.  In order to make it easy for the table to change to a different
+number of rows, we will have a template for the rows of the table, another
+for the table, and a third for the head/body part of the \s-1HTML\s0 page.
+.PP
+Below are the templates. (Pretend each one is in a separate file.)
+.PP
+.Vb 24
+\&  <!-- NAME: main.tpl -->
+\&  <html>
+\&  <head><title>{TITLE}</title>
+\&  </head>
+\&  <body>
+\&  {MAIN}
+\&  </body>
+\&  </html>
+\&  <!-- END: main.tpl -->
+\& 
+\& 
+\&  <!-- NAME: table.tpl -->
+\&  <table>
+\&  {ROWS}
+\&  </table>
+\&  <!-- END: table.tpl -->
+\& 
+\& 
+\&  <!-- NAME: row.tpl -->
+\&  <tr>
+\&  <td>{NUMBER}</td>
+\&  <td>{BIG_NUMBER}</td>
+\&  </tr>
+\&  <!-- END: row.tpl -->
+.Ve
+Now we can start coding...
+.PP
+.Vb 1
+\& /* START */
+.Ve
+.Vb 6
+\&    <?
+\&    include("class.FastTemplate.php3");
+\&    $tpl = new FastTemplate("/path/to/templates");
+\&    $tpl->define( array( main   => "main.tpl",
+\&                         table  => "table.tpl",
+\&                         row    => "row.tpl"    ));
+.Ve
+.Vb 1
+\&    $tpl->assign(TITLE,"FastTemplate Test");
+.Ve
+.Vb 6
+\&    for ($n=1; $n <= 3; $n++)
+\&    {
+\&        $Number = $n;
+\&        $BigNum = $n*10;
+\&        $tpl->assign( array(  NUMBER      =>  $Number,
+\&                              BIG_NUMBER  =>  $BigNum ));
+.Ve
+.Vb 7
+\&        $tpl->parse(ROWS,".row");
+\&    }
+\&    $tpl->parse(MAIN, array("table","main"));
+\&    Header("Content-type: text/plain");
+\&    $tpl->FastPrint();
+\&    exit;
+\&    ?>
+.Ve
+.Vb 1
+\&  When run it returns:
+.Ve
+.Vb 28
+\&  <!-- NAME: main.tpl -->
+\&  <html>
+\&  <head><title>FastTemplate Test</title>
+\&  </head>
+\&  <body>
+\&  <!-- NAME: table.tpl -->
+\&  <table>
+\&  <!-- NAME: row.tpl -->
+\&  <tr>
+\&  <td>1</td>
+\&  <td>10</td>
+\&  </tr>
+\&  <!-- END: row.tpl -->
+\&  <!-- NAME: row.tpl -->
+\&  <tr>
+\&  <td>2</td>
+\&  <td>20</td>
+\&  </tr>
+\&  <!-- END: row.tpl -->
+\&  <!-- NAME: row.tpl -->
+\&  <tr>
+\&  <td>3</td>
+\&  <td>30</td>
+\&  </tr>
+\&  <!-- END: row.tpl -->
+\&  
+\&  </table>
+\&  <!-- END: table.tpl -->
+.Ve
+.Vb 3
+\&  </body>
+\&  </html>
+\&  <!-- END: main.tpl -->
+.Ve
+If you're thinking you could have done the same thing in a few lines of
+plain \s-1PHP\s0, well yes you probably could.  But, how would a graphic designer
+tweak the resulting \s-1HTML\s0? How would you have a designer editing the \s-1HTML\s0
+while you're editing another part of the code?  How would you save the
+output to a file, or pipe it to another application?  How would you make
+your application multi-lingual? How would you build an application that has
+options for high graphics, or text-only?  FastTemplate really starts to
+shine when you are building mid to large scale web applications, simply
+because it begins to seperate the application's generic logic from the
+specific implementation.
+.SH "VERSION This is Revision 1.1.0 Jun 27, 13:20 CDI, cdi@thewebmasters.net The revision jumped from 0.8 to 1.1.0 since I've put all my source code into my own CVS repository now."
+.SH "AUTHOR"
+Original Perl module CGI::FastTemplate by Jason Moore jmoore@sober.com
+.PP
+PHP3 port by CDI cdi@thewebmasters.net 
+.PP
+PHP3 Version Copyright (c) 1999 CDI, cdi@thewebmasters.net,
+All Rights Reserved.
+.PP
+Perl Version Copyright (c) 1998 Jason Moore jmoore@sober.com. 
+All Rights Reserved.
+.PP
+This program is free software; you can redistribute it and/or modify it
+under the GNU General Artistic License, with the following stipulations;
+.PP
+Changes or modifications must retain these Copyright statements. Changes or
+modifications must be submitted to both AUTHORS.
+.PP
+This program is released under the General Artistic License.
+.PP
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the Artistic License for more
+details. This software is distributed AS\-IS.
+.PP
+Address Bug Reports or Comments on \fBTHIS PHP VERSION ONLY\fR to
+.PP
+.Vb 1
+\&    CDI, cdi@thewebmasters.net.
+.Ve
+The latest version of this class should be available from the following
+locations:
+.PP
+http://www.thewebmasters.net/php/
+.SH "DOCUMENTATION"
+Sascha Schumann has written a very nice FastTemplate tutorial.  It's on the
+PHPBuilder.com web site at;
+.PP
+http://www.phpbuilder.com/
+.PP
+This is a modified version of the CGI::FastTemplate man page, originally
+written by Jason Moore jmoore@sober.com. Forgive me if I didn't get all the
+Perlisms out of the example code.
+.PP
+This is not a complete port, the \fIdefine_nofile\fR\|(\fIarray()\fR), and/or
+\fIdefine_raw\fR\|(\fIarray()\fR) methods were not implemented in this port since I had no
+need or use for them.  Some of the methods are implemented differently
+(mostly due to PHP's stronger variable type requirements.) The functionality
+of each method has remained the same.  The \fIdefine_dynamic()\fR method is
+completely new to this PHP port and does not appear in the Perl version.
+.PP
+The variable declaration method has changed from the Perl version's
+$(A\-Z0-9_)+ to {(A\-Z0-9_)+}, which means you'll have to edit all your
+templates. The beginning and close curly braces allow for much faster and
+more accurate templates.
+.SH "SEE ALSO"
+CGI::FastTemplate Perl module, available from CPAN \- http://www.cpan.org
+
+.rn }` ''
+.IX Title "FASTTEMPLATE 1"
+.IX Name "FastTemplate 1.1.0 - PHP extension for mamanging templates and performing variable interpolation."
+
+.IX Header "NAME"
+
+.IX Header "SYNOPSIS"
+
+.IX Header "DESCRIPTION"
+
+.IX Header "CORE METHODS"
+
+.IX Subsection "\fIdefine\fR\|( array( key,value pairs) )"
+
+.IX Subsection "\fIdefine_nofile()\fR    alias: \fIdefine_raw()\fR"
+
+.IX Subsection "\fIdefine_dynamic\fR\|($Macro, \f(CW$ParentName\fR)"
+
+.IX Subsection "\fIclear_dynamic\fR\|($Macro)"
+
+.IX Subsection "\fIassign\fR\|( (key,value pair) or ( \fIarray\fR\|(key value pairs) )"
+
+.IX Subsection "\fIparse\fR\|(\s-1RETURN\s0, FileHandle(s) )"
+
+.IX Subsection "\fIstrict()\fR"
+
+.IX Subsection "\fIno_strict()\fR"
+
+.IX Subsection "\fIFastPrint\fR\|(\s-1HANDLE\s0)"
+
+.IX Header "OTHER METHODS"
+
+.IX Subsection "\fIfetch\fR\|(\s-1HANDLE\s0)"
+
+.IX Subsection "\fIget_assigned\fR\|($Var)    Christian Brandel cbrandel@gmx.de"
+
+.IX Subsection "\fIclear()\fR"
+
+.IX Subsection "\fIclear_parse()\fR"
+
+.IX Subsection "\fIclear_href\fR\|(\s-1KEY\s0)"
+
+.IX Subsection "\fIclear_define()\fR"
+
+.IX Subsection "\fIclear_tpl()\fR"
+
+.IX Subsection "\fIclear_all()\fR"
+
+.IX Subsection "Variables"
+
+.IX Subsection "Variable Interpolation (Template Parsing)"
+
+.IX Subsection "\s-1FULL\s0 \s-1EXAMPLE\s0"
+
+.IX Header "VERSION This is Revision 1.1.0 Jun 27, 13:20 CDI, cdi@thewebmasters.net The revision jumped from 0.8 to 1.1.0 since I've put all my source code into my own CVS repository now."
+
+.IX Header "AUTHOR"
+
+.IX Header "DOCUMENTATION"
+
+.IX Header "SEE ALSO"
+

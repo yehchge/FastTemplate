@@ -1,0 +1,35 @@
+Voituk Vadim voituk@asg.kiev.ua
+-- Fixed bug on calculation conditon to removing all unassigned template
+variables and added support for accessing object fields in template
+(using get() method of the object) like {Object.field}
+
+Alex Tonkov alex.tonkov@gmail.com
+-- Added define blocs which parsed in condition with defining some specified parse variable
+-- Added include block which include another template by statement (like SSI do)
+<!--#include file="include2.html"-->
+It is usefull if you have several different templates for different
+parts of page and you dont need to write any php code to gather all "blocks" of the page
+Also is very helpfull from designer point of view, he will see in a visual editor te result.
+
+AiK artvs@clubpro.spb.ru
+ -- more strict dynamic templates handling, including "silently removing"
+of unassigned  dynamic blocks
+ -- showDebugInfo() method that print into html conole some debug info
+
+Allyson Francisco de Paula Reis ragen@oquerola.com
+ -- Cache functions added
+
+Wilfried Trinkl - wisl@gmx.at
+ -- added Fast Write function
+
+GraFX webmaster@grafxsoftware.com
+ -- used str_replace instead of ereg_replace, this latest is not installed
+on a lot of servers and give out error.
+ -- added Pattern Assign - when variables or constants are the same as the
+template keys, these functions may be used as they are. Using these functions,
+can help you reduce the number of the assign functions in the php files, very
+useful for language files
+ -- get_magic_quotes_gpc() problem on some servers are fixed. Seems that some
+servers not read magic quotes correcttly and template files are messed up.
+
+If we missed someone, just drop us a mail.

@@ -1,0 +1,550 @@
+<HTML>
+<HEAD>
+<TITLE>PHP extension for mamanging templates and performing variable interpolation.</TITLE>
+</HEAD>
+<BODY>
+<!-- INDEX BEGIN -->
+<UL>
+  <LI><A HREF="#NAME">NAME</A>
+  <LI><A HREF="#SYNOPSIS">SYNOPSIS</A>
+  <LI><A HREF="#DESCRIPTION">DESCRIPTION</A>
+  <LI><A HREF="#CORE_METHODS">CORE METHODS</A>
+    <UL>
+      <LI><A HREF="#define_array_key_value_pairs_">define( array( key,value pairs) )</A>
+      <LI><A HREF="#define_nofile_alias_define_ra">define_nofile() alias: define_raw()</A>
+      <LI><A HREF="#define_dynamic_Macro_ParentNa">define_dynamic($Macro, $ParentName)</A>
+      <LI><A HREF="#clear_dynamic_Macro_">clear_dynamic($Macro)</A>
+      <LI><A HREF="#assign_key_value_pair_or_ar">assign( (key,value pair) or ( array(key value pairs) )</A>
+      <LI><A HREF="#parse_RETURN_FileHandle_s_">parse(RETURN, FileHandle(s) )</A>
+      <LI><A HREF="#strict_">strict()</A>
+      <LI><A HREF="#no_strict_">no_strict()</A>
+      <LI><A HREF="#FastPrint_HANDLE_">FastPrint(HANDLE)</A>
+      <LI><A HREF="#FastWrite_HANDLE_">FastWrite(HANDLE)</A>
+    </UL>
+  <LI><A HREF="#OTHER_METHODS">OTHER METHODS</A>
+    <UL>
+      <LI><A HREF="#fetch_HANDLE_">fetch(HANDLE)</A>
+      <LI><A HREF="#get_assigned_Var_Christian_Bra">get_assigned($Var) Christian Brandel cbrandel@gmx.de</A>
+      <LI><A HREF="#clear_">clear()</A>
+      <LI><A HREF="#clear_parse_">clear_parse()</A>
+      <LI><A HREF="#clear_href_KEY_">clear_href(KEY)</A>
+      <LI><A HREF="#clear_define_">clear_define()</A>
+      <LI><A HREF="#clear_tpl_">clear_tpl()</A>
+      <LI><A HREF="#clear_all_">clear_all()</A>
+      <LI><A HREF="#Variables">Variables</A>
+      <LI><A HREF="#Variable_Interpolation_Template">Variable Interpolation (Template Parsing)</A>
+      <LI><A HREF="#FULL_EXAMPLE">FULL EXAMPLE</A>
+    </UL>
+  <LI><A HREF="#VERSION">VERSION</A>
+  <LI><A HREF="#AUTHOR">AUTHOR</A>
+  <LI><A HREF="#DOCUMENTATION">DOCUMENTATION</A>
+  <LI><A HREF="#SEE_ALSO">SEE ALSO</A>
+</UL>
+<!-- INDEX END -->
+<HR>
+<H1><A NAME="NAME">NAME </A></H1>
+FastTemplate 1.1.5 - PHP extension for managing templates and performing variable interpolation.
+<P>
+<HR>
+<H1><A NAME="SYNOPSIS">SYNOPSIS </A></H1>
+<PRE>    include(&quot;cls_fast_template.php&quot;);
+    $tpl = FastTemplate(&quot;/path/to/templates&quot;);
+    $tpl-&gt;define( array(    main    =&gt; &quot;main.html&quot;,
+                            row     =&gt; &quot;table_row.html&quot;,
+                            all     =&gt; &quot;table_all.html&quot;  ));
+</PRE>
+<P>
+<PRE>    $tpl-&gt;assign(TITLE, &quot;I am the title.&quot;);
+    $defaults = ( array(    FONT    =&gt; '&lt;font size=+2 face=helvetica&gt;',
+                            EMAIL   =&gt; 'cdi@thewebmasters.net' ));
+</PRE>
+<P>
+<PRE>    $tpl-&gt;assign($defaults);
+    $tpl-&gt;parse(ROWS, &quot;.row&quot;);    // the '.' appends to ROWS
+    $tpl-&gt;parse(CONTENT, array(&quot;row&quot;, &quot;all&quot;));
+    $tpl-&gt;parse(CONTENT, &quot;main&quot;);
+    $tpl-&gt;FastPrint(CONTENT);
+</PRE>
+<P>
+<PRE>    $raw = $tpl-&gt;fetch(&quot;CONTENT&quot;);
+    echo &quot;$raw\n&quot;;</PRE>
+<P>
+<HR>
+<H1><A NAME="DESCRIPTION">DESCRIPTION </A></H1>
+<STRONG>What is a template?</STRONG>
+<P> A template is a text file with variables in it. When a template is parsed, the variables are interpolated to text. (The text can be a few bytes or a few hundred kilobytes.) Here is a simple template with one variable ('{NAME}'):
+<P>
+<PRE>    Hello {NAME}.  How are you?
+</PRE>
+<P> <STRONG>When are templates useful?</STRONG>
+<P> Templates are very useful for CGI programming, because adding HTML to your PHP code clutters your code and forces you to do any HTML modifications. By putting all of your HTML in seperate template files, you can let a graphic or interface designer change the look of your application without having to bug you, or let them muck around in your PHP code.
+<P> <STRONG>Why use FastTemplate?</STRONG>
+<P> <STRONG>Speed</STRONG>
+<P> FastTemplate parses with a single regular expression. It just does simple variable interpolation (i.e. there is no logic that you can add to templates - you keep the logic in the code). That's why it's has 'Fast' in it's name!
+<P> <STRONG>Flexibility</STRONG>
+<P> The API is robust and flexible, and allows you to build very complex HTML documents/interfaces. It is also completely written in PHP and (should) work on Unix or NT. Also, it isn't restricted to building HTML documents -- it could be used to build any ascii based document (postscript, XML, email - anything).
+<P> <STRONG>What are the steps to use FastTemplate?</STRONG>
+<P> The main steps are:
+<P>
+<PRE>    1. define
+    2. assign 
+    3. parse
+    4. FastPrint
+</PRE>
+<P> These are outlined in detail in CORE METHODS below.
+<P>
+<HR>
+<H1><A NAME="CORE_METHODS">CORE METHODS </A></H1>
+<P>
+<HR>
+<H2><A NAME="define_array_key_value_pairs_">define( array( key,value pairs) ) </A></H2>
+The method <CODE>define()</CODE> maps a template filename to a (usually shorter) name;
+<P>
+<PRE>    $tpl = new FastTemplate(&quot;/path/to/templates&quot;);
+</PRE>
+<P>
+<PRE>    $tpl-&gt;define( array(    main    =&gt; &quot;main.html&quot;,
+                            footer  =&gt; &quot;footer.html&quot; ));
+</PRE>
+<P> This new name is the name that you will use to refer to the templates. Filenames should not appear in any place other than a <CODE>define().</CODE>
+<P> (Note: This is a required step! This may seem like an annoying extra step when you are dealing with a trivial example like the one above, but when you are dealing with dozens of templates, it is very handy to refer to templates with names that are indepandant of filenames.)
+<P> TIP: Since <CODE>define()</CODE> does not actually load the templates, it is faster and more legible to define all the templates with one call to <CODE>define().</CODE>
+<P>
+<P>
+<HR>
+<H2><A NAME="define_nofile_alias_define_ra">define_nofile() alias: define_raw() </A></H2>
+<STRONG>THESE METHODS ARE NOT PORTED TO THE PHP VERSION</STRONG>
+<P> And probably never will be. The purpose of this class is to <STRONG>eliminate</STRONG> HTML from your PHP code, not to create new ways of adding it back in.
+<P>
+<P>
+<HR>
+<H2><A NAME="define_dynamic_Macro_ParentNa">define_dynamic($Macro, $ParentName) </A></H2>
+Nino Martincevic, <A HREF="MAILTO:don@agi.de,">don@agi.de,</A> emailed me with a question about doing something like this, and I thought it was a such a cool idea I immediately sat down and cranked it out...
+<P> You can define dynamic content within a static template. (Lists) Here's an example of <CODE>define_dynamic();</CODE>
+<P>
+<PRE>    $tpl = new FastTemplate(&quot;./templates&quot;);
+</PRE>
+<P>
+<PRE>    $tpl-&gt;define(    array( main  =&gt;  &quot;main.html&quot;,
+                            table =&gt;  &quot;dynamic.html&quot; ));
+</PRE>
+<P>
+<PRE>    $tpl-&gt;define_dynamic( &quot;row&quot; , &quot;table&quot; );
+</PRE>
+<P> This tells FastTemplate that buried in the ``table'' template is a dynamic block, named ``row''. In older verions of FastTemplate (pre 0.7) this ``row'' template would have been defined as it's own file. Here's how a dynamic block appears within a template file;
+<P>
+<PRE>    &lt;!-- NAME: dynamic.html --&gt;
+    &lt;table&gt;
+</PRE>
+<P>
+<PRE>    &lt;!-- BEGIN DYNAMIC BLOCK: row --&gt;
+    &lt;tr&gt;
+    &lt;td&gt;{NUMBER}&lt;/td&gt;
+    &lt;td&gt;{BIG_NUMBER}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;!-- END DYNAMIC BLOCK: row --&gt;
+</PRE>
+<P>
+<PRE>    &lt;/table&gt;
+    &lt;!-- END: dynamic.html --&gt;
+</PRE>
+<P> The syntax of your BEGIN and END lines needs to be VERY exact. It is case sensitive. The code block begins on a new line all by itself. There cannot be ANY OTHER TEXT on the line with the BEGIN or END statement. (although you can have any amount of whitespace before or after) It must be in the format shown;
+<P>
+<PRE>    &lt;!-- BEGIN DYNAMIC BLOCK: handle_name --&gt;
+</PRE>
+<P> The line must be exact, right down to the spacing of the characters. The same is true for your END line. The BEGIN and END lines cannot span multiple lines. Now when you call the <CODE>parse()</CODE> method, FastTemplate will automatically spot the dynamic block, strip it out, and use it exactly as if you had defined it as a stand-alone template. No additional work is required on your part to make it work - just define it, and FastTemplate will do the rest. Included with this archive should have been a file named <STRONG>define_dynamic.phtml</STRONG> which shows a working example of a dynamic block.
+<P> There are a few rules when using dynamic blocks - dynamic blocks should not be nested inside other dynamic blocks - strange things WILL occur. You -can- have more than one nested block of code in a page, but of course, no two blocks can share the same defined handle. The error checking for <CODE>define_dynamic()</CODE> is miniscule at best. If you define a dynamic block and FastTemplate fails to find it, no errors will be generated, just really weird output. (FastTemplate will not append the dynamic data to the retured output) Since the BEGIN and END lines are stripped out of the parsed results, if you ever see your BEGIN or END line in the parsed output, that means that FastTemplate failed to find that dynamic block.
+<P>
+<P>
+<HR>
+<H2><A NAME="clear_dynamic_Macro_">clear_dynamic($Macro) </A></H2>
+This provides a method to remove the dynamic block definition from the parent macro provided that you haven't already parsed the template. Using our example above:
+<P>
+<PRE>    $tpl-&gt;clear_dynamic(&quot;row&quot;);
+</PRE>
+<P> Would completely strip all of the <STRONG>unparsed</STRONG> dynamic blocks named ``row'' from the parent template. This method won't do a thing if the template has already been parsed! (Because the required BEGIN and END lines have been removed through the parsing) This method works well when you are accessing a database, and your ``rows'' may or may not return anything to print to the template. If your database query doesn't return anything, you can now strip out the rows you've set up for the results. (Gee, maybe I ran into this problem myself ? :-)
+<P>
+<P>
+<HR>
+<H2><A NAME="assign_key_value_pair_or_ar">assign( (key,value pair) or ( array(key value pairs) ) </A></H2>
+The method <CODE>assign()</CODE> assigns values for variables. In order for a variable in a template to be interpolated it must be assigned. There are two forms which have some important differences. The simple form, is to accept an array and copy all the key/value pairs into an array in FastTemplate. There is only one array in FastTemplate, so assigning a value for the same key will overwrite that key.
+<P>
+<PRE>    $tpl-&gt;assign(TITLE    =&gt; &quot;king kong&quot;);
+    $tpl-&gt;assign(TITLE    =&gt; &quot;godzilla&quot;);    // overwrites &quot;king kong&quot;
+</PRE>
+<P>
+<P>
+<HR>
+<H2><A NAME="parse_RETURN_FileHandle_s_">parse(RETURN, FileHandle(s) ) </A></H2>
+The parse function is the main function in FastTemplate. It accepts a new key value pair where the key is the TARGET and the values are the SOURCE templates. There are three forms this can be in:
+<P>
+<PRE>    $tpl-&gt;parse(MAIN, &quot;main&quot;);                     // regular
+    $tpl-&gt;parse(MAIN, array ( &quot;table&quot;, &quot;main&quot;) );  // compound
+    $tpl-&gt;parse(MAIN, &quot;.row&quot;);                     // append
+</PRE>
+<P> In the regular version, the template named ``main'' is loaded if it hasn't been already, all the variables are interpolated, and the result is then stored in FastTemplate as the value MAIN. If the variable '{MAIN}' shows up in a later template, it will be interpolated to be the value of the parsed ``main'' template. This allows you to easily nest templates, which brings us to the compound style.
+<P> The compound style is designed to make it easier to nest templates. The following are equivalent:
+<P>
+<PRE>    $tpl-&gt;parse(MAIN, &quot;table&quot;);
+    $tpl-&gt;parse(MAIN, &quot;.main&quot;);
+</PRE>
+<P>
+<PRE>    // is the same as:
+</PRE>
+<P>
+<PRE>    $tpl-&gt;parse(MAIN, array(&quot;table&quot;, &quot;main&quot;));
+    // this form saves function calls and makes your code cleaner
+</PRE>
+<P> It is important to note that when you are using the compound form, each template after the first, must contain the variable that you are parsing the results into. In the above example, 'main' must contain the variable '{MAIN}', as that is where the parsed results of 'table' is stored. If 'main' does not contain the variable '{MAIN}' then the parsed results of 'table' will be lost.
+<P> The append style allows you to append the parsed results to the target variable. Placing a leading dot <STRONG>.</STRONG> before a defined file handle tells FastTemplate to append the parsed results of this template to the returned results. This is most useful when building tables that have an dynamic number of rows - such as data from a database query.
+<P>
+<P>
+<HR>
+<H2><A NAME="strict_">strict() </A></H2>
+When <CODE>strict()</CODE> is on (it is on by default) all variables found during template parsing that are unresolved have a warning printed to STDERR;
+<P> [FastTemplate] Warning: no value found for variable: SOME_VAR
+<P> Also, the variables will be left in the output document. This was done for two reasons: to allow for parsing to be done in stages (i.e. multiple passes), and to make it easier to identify undefined variables since they appear in the parsed output. If you want to replace unknown variables with an empty string, see: <CODE>no_strict().</CODE>
+<P> Note: STDERR output should be captured and logged by the webserver. With apache (and unix!) you can tail the error log during development to see the results as in;
+<PRE>        tail -f /var/log/httpd/error_log
+</PRE>
+<P>
+<HR>
+<H2><A NAME="no_strict_">no_strict() </A></H2>
+Turns off warning messages about unresolved template variables. A call to <CODE>no_strict()</CODE> is required to replace unknown variables with an empty string. By default, all instances of FastTemplate behave as is <CODE>strict()</CODE> was called. Also, <CODE>no_strict()</CODE> must be set for each instance of FastTemplate;
+<P>
+<PRE>    $tpl = new FastTemplate(&quot;/path/to/templates&quot;);
+    $tpl-&gt;no_strict();
+</PRE>
+<P>
+<P>
+<HR>
+<H2><A NAME="FastPrint_HANDLE_">FastPrint(HANDLE) </A></H2>
+The method <CODE>FastPrint()</CODE> prints the contents of the named variable. If no variable is given, then it prints the last variable that was used in a call to <CODE>parse()</CODE> which I find is a reasonable default.
+<P>
+<PRE>    $tpl-&gt;FastPrint();       // continuing from the last example, would
+                             // print the value of MAIN
+</PRE>
+<P>
+<PRE>    $tpl-&gt;FastPrint(&quot;MAIN&quot;); // ditto
+</PRE>
+<P> This method is provided for convenience. If you need to print somewhere else (a socket, file handle) you would want to <CODE>fetch()</CODE> a reference to the data first:
+<P>
+<PRE>    $data = $tpl-&gt;fetch(&quot;MAIN&quot;);
+    fwrite($fd, $data);     // save to a file
+</PRE>
+<P>
+<P>
+<HR>
+<H2><A NAME="FastWrite_HANDLE_">FastWrite(HANDLE) </A></H2>
+The method <CODE>FastWrite()</CODE> write the contents of the named variable into a file.
+<P>
+<PRE>    $tpl-&gt;FastWrite();       // continuing from the last example, would
+                             // print the value of MAIN
+</PRE>
+<P>
+<PRE>    $tpl-&gt;FastWrite(&quot;MAIN&quot;); // ditto
+</PRE>
+<P> This method is provided for convenience. If you need to print somewhere else (a socket, file handle) you would want to <CODE>fetch()</CODE> a reference to the data first:
+<PRE>    $data = $tpl-&gt;fetch(&quot;MAIN&quot;);
+    fwrite($fd, $data);     // save to a file
+
+
+To write into a folder, depend on srver configuration.</PRE>
+<P>
+<P>
+<HR>
+<H1><A NAME="OTHER_METHODS">OTHER METHODS </A></H1>
+<P>
+<HR>
+<H2><A NAME="fetch_HANDLE_">fetch(HANDLE) </A></H2>
+Returns the raw data from a parsed handle.
+<P>
+<PRE>    $tpl-&gt;parse(CONTENT, &quot;main&quot;);
+    $content = $tpl-&gt;fetch(&quot;CONTENT&quot;);
+    print $content;        // print to STDOUT
+    fwrite($fd, $content); // write to filehandle
+</PRE>
+<P>
+<P>
+<HR>
+<H2><A NAME="get_assigned_Var_Christian_Bra">get_assigned($Var) Christian Brandel cbrandel@gmx.de </A></H2>
+This method will return the value of a variable that has been set via <CODE>assign().</CODE> This allows you to easily pass variables around within functions by using the FastTemplate class to handle ``globalization'' of the variables. For example;
+<P>
+<PRE>    $tpl-&gt;assign(  array(  TITLE    =&gt;    $title,
+                           BGCOLOR  =&gt;    $bgColor,
+                           TEXT     =&gt;    $textColor ));
+</PRE>
+<P>
+<PRE>    (sometime later...)
+    $bgColor = $tpl-&gt;get_assigned(BGCOLOR);
+</PRE>
+<P>
+<P>
+<HR>
+<H2><A NAME="clear_">clear() </A></H2>
+Note: All of the <CODE>clear()</CODE> functions are for use anywhere where your scripts are persistant. They generally aren't needed if you are writing CGI scripts.
+<P> <CODE>clear()</CODE> Clears the internal references that store data passed to <CODE>parse().</CODE> <CODE>clear()</CODE> accepts individual references, or array references as arguments.
+<P> Often <CODE>clear()</CODE> is at the end of a script:
+<P>
+<PRE>    $tpl-&gt;FastPrint(&quot;MAIN&quot;);
+    $tpl-&gt;clear(&quot;MAIN&quot;);
+</PRE>
+<P>
+<PRE>    or
+</PRE>
+<P>
+<PRE>    $tpl-&gt;FastPrint(&quot;MAIN&quot;);
+    $tpl-&gt;FastPrint(&quot;CONTENT&quot;);
+    $tpl-&gt;clear(array(&quot;MAIN&quot;,&quot;CONTENT&quot;));
+</PRE>
+<P> If called with no arguments, removes ALL references that have been set via <CODE>parse().</CODE>
+<P>
+<P>
+<HR>
+<H2><A NAME="clear_parse_">clear_parse() </A></H2>
+See: <CODE>clear()</CODE>
+<P>
+<P>
+<HR>
+<H2><A NAME="clear_href_KEY_">clear_href(KEY) </A></H2>
+Removes a given reference from the list of refs that is built using:
+<P>
+<PRE>    $tpl-&gt;assign(KEY = val);
+</PRE>
+<P> If called with no arguments, it removes all references from the array.
+<P> (Same as <CODE>clear_assign()</CODE> )
+<P>
+<PRE>    $tpl-&gt;assign(    array(    MOVIE  =&gt;  &quot;The Avengers&quot;,
+                               RATE   =&gt;  &quot;Sucked&quot;    ));
+</PRE>
+<P>
+<PRE>    $tpl-&gt;clear_href(&quot;MOVIE&quot;);
+    // Now only {RATE} exists in the assign() array
+</PRE>
+<P>
+<P>
+<HR>
+<H2><A NAME="clear_define_">clear_define() </A></H2>
+Clears the internal list that stores data passed to:
+<P>
+<PRE>    $tpl-&gt;define();
+</PRE>
+<P> Note: The hash that holds the loaded templates is not touched with this method. ( See: <CODE>clear_tpl()</CODE> ) Accepts a single file handle, an array of file handles, or nothing as arguments. If no argument is given, it clears ALL file handles.
+<P>
+<PRE>    $tpl-&gt;define( array( MAIN =&gt; &quot;main.html&quot;,
+                         BODY =&gt; &quot;body.html&quot;,
+                         FOOT =&gt; &quot;foot.html&quot;  ));
+</PRE>
+<P>
+<PRE>    // some code here
+</PRE>
+<P>
+<PRE>    $tpl-&gt;clear_define(&quot;MAIN&quot;);
+</PRE>
+<P>
+<P>
+<HR>
+<H2><A NAME="clear_tpl_">clear_tpl() </A></H2>
+Clears the internal array that stores the contents of the templates. (If they have been loaded) If you are having problems with template changes not being reflected, try adding this method to your script.
+<P>
+<PRE>    $tpl-&gt;define(MAIN,&quot;main.html&quot; );
+    // assign(), parse() etc etc...
+</PRE>
+<P>
+<PRE>    $tpl-&gt;clear_tpl(MAIN);    // Loaded template now unloaded.
+</PRE>
+<P>
+<P>
+<HR>
+<H2><A NAME="clear_all_">clear_all() </A></H2>
+Cleans the module of any data, except for the ROOT directory. Equivalent to:
+<P>
+<PRE>    $tpl-&gt;clear_define();
+    $tpl-&gt;clear_href();
+    $tpl-&gt;clear_tpl();
+    $tpl-&gt;clear_parse();
+</PRE>
+<P> In fact, that's exactly what it does.
+<P>
+<P>
+<HR>
+<H2><A NAME="Variables">Variables </A></H2>
+A variable is defined as:
+<P>
+<PRE>    {([A-Z0-9_]+)}
+</PRE>
+<P> This means, that a variable must begin with a curly brace '{'. The second and remaining characters must be uppercase letters or digits 'A-Z0-9'. Remaining characters can include an underscore. The variable is terminated by a closing curly brace '}'.
+<P> For example, the following are valid variables:
+<PRE>    {FOO}
+    {F123F}
+    {TOP_OF_PAGE}
+</PRE>
+<P>
+<HR>
+<H2><A NAME="Variable_Interpolation_Template">Variable Interpolation (Template Parsing) </A></H2>
+If a variable cannot be resolved to anything, a warning is printed to STDERR. See <CODE>strict()</CODE> and <CODE>no_strict()</CODE> for more info.
+<P> Some examples will make this clearer.
+<P>
+<PRE>    Assume:
+</PRE>
+<P>
+<PRE>    $FOO = &quot;foo&quot;;
+    $BAR = &quot;bar&quot;;
+    $ONE = &quot;1&quot;;
+    $TWO = &quot;2&quot;;    
+    $UND = &quot;_&quot;;
+    
+    Variable    Interpolated/Parsed
+    ------------------------------------------------
+    {FOO}            foo    
+    {FOO}-{BAR}      foo-bar
+    {ONE_TWO}        {ONE_TWO} // {ONE_TWO} is undefined!    
+    {ONE}{UND}{TWO}  1_2
+    ${FOO}           $foo
+    $25,000          $25,000
+    {foo}            {foo}     // Ignored, it's not valid, nor will it
+                               // generate any error messages.
+</PRE>
+<P>
+<P>
+<HR>
+<H2><A NAME="FULL_EXAMPLE">FULL EXAMPLE </A></H2>
+This example will build an HTML page that will consist of a table. The table will have 3 numbered rows. The first step is to decide what templates we need. In order to make it easy for the table to change to a different number of rows, we will have a template for the rows of the table, another for the table, and a third for the head/body part of the HTML page.
+<P> Below are the templates. (Pretend each one is in a separate file.)
+<P>
+<PRE>  &lt;!-- NAME: main.html --&gt;
+  &lt;html&gt;
+  &lt;head&gt;&lt;title&gt;{TITLE}&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+  {MAIN}
+  &lt;/body&gt;
+  &lt;/html&gt;
+  &lt;!-- END: main.html --&gt;
+ 
+ 
+  &lt;!-- NAME: table.html --&gt;
+  &lt;table&gt;
+  {ROWS}
+  &lt;/table&gt;
+  &lt;!-- END: table.html --&gt;
+ 
+ 
+  &lt;!-- NAME: row.html --&gt;
+  &lt;tr&gt;
+  &lt;td&gt;{NUMBER}&lt;/td&gt;
+  &lt;td&gt;{BIG_NUMBER}&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;!-- END: row.html --&gt;
+</PRE>
+<P> Now we can start coding...
+<P>
+<PRE> /* START */</PRE>
+<PRE>    &lt;?
+    include(&quot;cls_fast_template.php&quot;);
+    $tpl = new FastTemplate(&quot;/path/to/templates&quot;);
+    $tpl-&gt;define( array( main   =&gt; &quot;main.html&quot;,
+                         table  =&gt; &quot;table.html&quot;,
+                         row    =&gt; &quot;row.html&quot;    ));
+</PRE>
+<P>
+<PRE>    $tpl-&gt;assign(TITLE,&quot;FastTemplate Test&quot;);
+</PRE>
+<P>
+<PRE>    for ($n=1; $n &lt;= 3; $n++)
+    {
+        $Number = $n;
+        $BigNum = $n*10;
+        $tpl-&gt;assign( array(  NUMBER      =&gt;  $Number,
+                              BIG_NUMBER  =&gt;  $BigNum ));
+</PRE>
+<P>
+<PRE>        $tpl-&gt;parse(ROWS,&quot;.row&quot;);
+    }
+    $tpl-&gt;parse(MAIN, array(&quot;table&quot;,&quot;main&quot;));
+    Header(&quot;Content-type: text/plain&quot;);
+    $tpl-&gt;FastPrint();
+    exit;
+    ?&gt;
+</PRE>
+<P>
+<PRE>  When run it returns:
+</PRE>
+<P>
+<PRE>  &lt;!-- NAME: main.html --&gt;
+  &lt;html&gt;
+  &lt;head&gt;&lt;title&gt;FastTemplate Test&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+  &lt;!-- NAME: table.html --&gt;
+  &lt;table&gt;
+  &lt;!-- NAME: row.html --&gt;
+  &lt;tr&gt;
+  &lt;td&gt;1&lt;/td&gt;
+  &lt;td&gt;10&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;!-- END: row.html --&gt;
+  &lt;!-- NAME: row.html --&gt;
+  &lt;tr&gt;
+  &lt;td&gt;2&lt;/td&gt;
+  &lt;td&gt;20&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;!-- END: row.html --&gt;
+  &lt;!-- NAME: row.html --&gt;
+  &lt;tr&gt;
+  &lt;td&gt;3&lt;/td&gt;
+  &lt;td&gt;30&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;!-- END: row.html --&gt;
+  
+  &lt;/table&gt;
+  &lt;!-- END: table.html --&gt;
+</PRE>
+<P>
+<PRE>  &lt;/body&gt;
+  &lt;/html&gt;
+  &lt;!-- END: main.html --&gt;
+</PRE>
+<P> If you're thinking you could have done the same thing in a few lines of plain PHP, well yes you probably could. But, how would a graphic designer tweak the resulting HTML? How would you have a designer editing the HTML while you're editing another part of the code? How would you save the output to a file, or pipe it to another application? How would you make your application multi-lingual? How would you build an application that has options for high graphics, or text-only? FastTemplate really starts to shine when you are building mid to large scale web applications, simply because it begins to seperate the application's generic logic from the specific implementation.
+<H1><A NAME="AUTHOR">AUTHOR </A></H1>
+<p>Thanx to some programmers (see below) </p>
+<p>Artyem V. Shkondin aka AiK <a href="mailto:artvs@clubpro.spb.ru">artvs@clubpro.spb.ru</a> <br>
+  Allyson Francisco de Paula Reis <a href="mailto:ragen@oquerola.com">ragen@oquerola.com</a><br>
+  GraFX Software Solutions <a href="mailto:webmaster@grafxsoftware.com">webmaster@grafxsoftware.com</a> <br>
+  Wilfried Trinkl <a href="mailto:wisl@gmx.at">wisl@gmx.at</a> <br>
+  CDI <A
+HREF="MAILTO:cdi@thewebmasters.net">cdi@thewebmasters.net</A></p>
+<p>Original Perl module CGI::FastTemplate by Jason Moore <A
+HREF="MAILTO:jmoore@sober.com">jmoore@sober.com</A> </p>
+<P> PHP3 Version Copyright (c) 1999 CDI, <A
+HREF="MAILTO:cdi@thewebmasters.net,">cdi@thewebmasters.net,</A> All Rights Reserved.
+<P> Perl Version Copyright (c) 1998 Jason Moore <A
+HREF="MAILTO:jmoore@sober.com.">jmoore@sober.com.</A> All Rights Reserved.
+<P> This program is free software; you can redistribute it and/or modify it under the GNU General Artistic License, with the following stipulations;
+<P> Changes or modifications must retain these Copyright statements. Changes or modifications must be submitted to both AUTHORS.
+<P> This program is released under the General Artistic License.
+<P> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Artistic License for more details. This software is distributed AS-IS.
+<P> Address Bug Reports or Comments on <STRONG>THIS PHP VERSION ONLY</STRONG> to
+<PRE>    GraFX Software Solutions <a href="mailto:webmaster@grafxsoftware.com">webmaster@grafxsoftware.com</a> </PRE>
+<P> The latest version of this class should be available from the following locations:
+<P> <A
+HREF="http://www.grafxsoftware.com">http://www.grafxsoftware.com/</A>
+<P>
+<HR>
+<H1><A NAME="DOCUMENTATION">DOCUMENTATION </A></H1>
+Sascha Schumann has written a very nice FastTemplate tutorial. It's on the PHPBuilder.com web site at;
+<P> <A HREF="http://www.phpbuilder.com/">http://www.phpbuilder.com/</A>
+<P> This is a modified version of the CGI::FastTemplate man page, originally written by Jason Moore <A
+HREF="MAILTO:jmoore@sober.com.">jmoore@sober.com.</A> Forgive me if I didn't get all the Perlisms out of the example code.
+<P> This is not a complete port, the <CODE>define_nofile(array()),</CODE> and/or <CODE>define_raw(array())</CODE> methods were not implemented in this port since I had no need or use for them. Some of the methods are implemented differently (mostly due to PHP's stronger variable type requirements.) The functionality of each method has remained the same. The <CODE>define_dynamic()</CODE> method is completely new to this PHP port and does not appear in the Perl version.
+<P> The variable declaration method has changed from the Perl version's $(A-Z0-9_)+ to {(A-Z0-9_)+}, which means you'll have to edit all your templates. The beginning and close curly braces allow for much faster and more accurate templates.
+<P>
+<P>
+<HR>
+<H1><A NAME="SEE_ALSO">SEE ALSO </A></H1>
+CGI::FastTemplate Perl module, available from CPAN - <A
+HREF="http://www.cpan.org">http://www.cpan.org</A>
+<P>
+  </DL>
+</BODY>
+</HTML>
